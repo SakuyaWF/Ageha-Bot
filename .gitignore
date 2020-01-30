@@ -3,6 +3,9 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# Ignores the auth file with the token
+auth.json
+
 # User-specific files
 *.rsuser
 *.suo
