@@ -1,2 +1,2 @@
 # Ageha-Bot
- Bot for Discord
+ The smuggest of the smuggest.
