@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Ageha
 {
-    class Ageha
+    public class Ageha
     {
         /// <summary>
         /// SocketClient is the type of connection the bot makes to Discord's API
@@ -22,7 +22,7 @@ namespace Ageha
         /// <summary>
         /// The main method of any program, redirected to the asynchronous version
         /// </summary>
-        static void Main(string[] args) => new Ageha().MainAsync().GetAwaiter().GetResult();
+        private static void Main(string[] args) => new Ageha().MainAsync().GetAwaiter().GetResult();
 
         /// <summary>
         /// The async version of the main method
@@ -34,6 +34,7 @@ namespace Ageha
             _client = new DiscordSocketClient();
             _client.Log += Log;
 
+            // Pass the type of the program as bot and reads the token from a JSON file
             await _client.LoginAsync(TokenType.Bot, JsonWrapper.ReadJSON(@"D:\Development\_Projects\Ageha\Ageha\Resources\auth.json").Value<string>("token"));
             await _client.StartAsync();
 
@@ -53,6 +54,7 @@ namespace Ageha
 
         private Task OnReady()
         {
+            // Prints to the console all the servers the bot is connected to
             Log(LogSeverity.Info, $"Connected to these servers as '{_client.CurrentUser.Username}': ");
 
             foreach (var guild in _client.Guilds)
@@ -68,25 +70,17 @@ namespace Ageha
             return Task.CompletedTask;
         }
 
-        private async Task OnMessageReceived(SocketMessage message)
-        {
-            if (message.Content == "!ping")
-            {
-               await message.Channel.SendMessageAsync("Pong");
-            }
-        }
-
         /// <summary>
         /// The logging method of the bot
         /// </summary>
         /// <param name="msg">A discord log message</param>
         /// <returns>A completed task</returns>
-        private Task Log(LogMessage msg)
+        private static Task Log(LogMessage msg)
         {
             Console.WriteLine(msg.ToString());
             return Task.CompletedTask;
         }
 
-        private Task Log(LogSeverity logSeverity, string message, string source = "Debugging") => Log(new LogMessage(logSeverity, source, message));
+        public static Task Log(LogSeverity logSeverity, string message, string source = "Debugging") => Log(new LogMessage(logSeverity, source, message));
     }
 }

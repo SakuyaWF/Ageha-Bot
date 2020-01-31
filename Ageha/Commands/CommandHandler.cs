@@ -1,18 +1,26 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Ageha.Commands
 {
     public class CommandHandler
     {
+        // Initial constructors
         private readonly DiscordSocketClient _client;
+
         private readonly CommandService _service;
+
+        /// <summary>
+        /// The prefix used by the bot
+        /// </summary>
         public char Prefix { get; protected set; }
+
+        /// <summary>
+        /// If the bot should log the error of commands in the console
+        /// </summary>
         public bool MessageOnError { get; set; }
 
         public CommandHandler(DiscordSocketClient client, CommandService commands, char prefix)
@@ -23,9 +31,15 @@ namespace Ageha.Commands
             this.MessageOnError = false;
         }
 
+        /// <summary>
+        /// This method initialize all the handlers and commands, it must be called in the main method of the bot after instantiating the DiscordSocketClient
+        /// </summary>
         public async Task InstallCommandsAsync()
         {
+            // This adds an event handler to the MessageRecceived and pass it to a command handler
             _client.MessageReceived += HandleCommandAsync;
+
+            // Adds the modules from the main assembly and register them
             await _service.AddModulesAsync(assembly: Assembly.GetEntryAssembly(), services: null);
         }
 
@@ -40,16 +54,11 @@ namespace Ageha.Commands
                 return;
             }
 
-            if(message.Author == _client.CurrentUser)
-            {
-                return;
-            }
-
             // Track where the prefix ends and the command begins
             int argumentPos = 0;
 
             // Make sure that the commands wasn't issued by a bot and that it has the prefix
-            if( !(message.HasCharPrefix(this.Prefix, ref argumentPos) || message.HasMentionPrefix(_client.CurrentUser, ref argumentPos) || message.Author.IsBot) )
+            if (!(message.HasCharPrefix(this.Prefix, ref argumentPos) || message.HasMentionPrefix(_client.CurrentUser, ref argumentPos)) || message.Author.IsBot)
             {
                 return;
             }
