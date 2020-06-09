@@ -10,10 +10,10 @@ namespace Ageha.Commands.Modules
     {
         private readonly string MessageBaseLink = @"https://discordapp.com/channels/";
 
-        [Command("quote")]
+        [Command("quote", false)]
         [Summary("Quotes a message")]
         [Alias("q")]
-        public async Task QuoteAsync([Remainder] [Summary("The message link to quote")] string link)
+        public async Task QuoteAsync([Summary("The message link to quote")] string link, [Remainder][Summary("The message to follow the quote.")] string quoteMessage = "")
         {
             // Initializes the control boolean
             bool success = false;
@@ -74,13 +74,6 @@ namespace Ageha.Commands.Modules
             // Free up some memory
             ids = null;
 
-            // If the message is null or empty, delete the original user command message
-            if (String.IsNullOrEmpty(quotedMessage.Content))
-            {
-                await Context.Message.DeleteAsync();
-                return;
-            }
-
             // Initialize the embed builder, sets the author as the user from the quoted message and their avatar,
             // put the message in the description with a follow up link, also puts the channel, server and timestamp
             EmbedBuilder response = new EmbedBuilder();
@@ -90,35 +83,17 @@ namespace Ageha.Commands.Modules
             response.Color = Color.LighterGrey;
 
             // Sends the message back to the user
-            await ReplyAsync(embed: response.Build());
-        }
-
-        private static Stream GetStreamFromUrl(string url)
-        {
-            byte[] imageData = null;
-
-            using (var wc = new System.Net.WebClient())
-                imageData = wc.DownloadData(url);
-
-            return new MemoryStream(imageData);
-        }
-
-        [Command("emote")]
-        [Summary("Sends an emote")]
-        public async Task SaysAsync([Remainder] [Summary("The emote to send")] string link)
-        {
-            /*foreach (var tag in Context.Message.Tags)
+            if (string.IsNullOrWhiteSpace(quoteMessage))
             {
-                await ReplyAsync($"{tag.Type.ToString()} {tag.Key.ToString()} {tag.Value.ToString()}");
-                await ReplyAsync(Emote.Parse($"<:{(tag.Value as Emote).Name}:{tag.Key.ToString()}>").Url);
-            }*/
+                await ReplyAsync($"*Quoted by {Context.Message.Author.Mention}*", embed: response.Build());
+            }
+            else
+            {
+                await ReplyAsync($"*Quoted by {Context.Message.Author.Mention}*:\n> {quoteMessage}", embed: response.Build());
+            }
 
-            EmbedBuilder img = new EmbedBuilder();
-            //img.ImageUrl = link;
-
-            img.WithThumbnailUrl(link);
-
-            await Context.Channel.SendFileAsync(stream: GetStreamFromUrl(link), "emote.jpg");
+            // Delete the original user command message
+            await Context.Message.DeleteAsync();
         }
     }
 }

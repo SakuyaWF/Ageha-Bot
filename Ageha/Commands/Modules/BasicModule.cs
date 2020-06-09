@@ -11,16 +11,17 @@ namespace Ageha.Commands.Modules
         [Summary("Echoes a message.")]
         public Task SayAsync([Remainder][Summary("The text to echo")] string echo) => ReplyAsync(echo);
 
-        [Command("says")]
-        [Summary("Echoes a message.")]
-        public async Task SaysAsync([Remainder][Summary("The text to echo")] string echo)
+        [Command("help")]
+        [Summary("Looks like you need help.")]
+        public Task HelpAsync([Remainder][Summary("The topic to get help with")] string argument = "")
         {
-            foreach (var tag in Context.Message.Tags)
+            if (string.IsNullOrWhiteSpace(argument))
             {
-                await ReplyAsync($"{tag.Type.ToString()} {tag.Key.ToString()} {tag.Value.ToString()}");
-
-                if (tag.Type == TagType.Emoji)
-                    await ReplyAsync(Emote.Parse($"<:{(tag.Value as Emote).Name}:{tag.Key.ToString()}>").Url);
+                return ReplyAsync("I'm not sure what you need help with. Try |help [topic]");
+            }
+            else
+            {
+                return ReplyAsync($"It looks like you might need help with {argument}");
             }
         }
 

@@ -1,6 +1,9 @@
-﻿using Discord.Commands;
+﻿using Ageha.Commands.Modules;
+using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -63,6 +66,18 @@ namespace Ageha.Commands
                 return;
             }
 
+            if (message.Content == _client.CurrentUser.Mention)
+            {
+                await message.Channel.SendMessageAsync("Hey use the |list command to see my commands");
+                return;
+            }
+
+            if (message.Content == "|list")
+            {
+                await ListAsync(message.Channel);
+                return;
+            }
+
             // Create a WebSocket based command context based on the message
             SocketCommandContext commandContext = new SocketCommandContext(_client, message);
 
@@ -75,6 +90,19 @@ namespace Ageha.Commands
                 //await commandContext.Channel.SendMessageAsync(result.ErrorReason);
                 Console.WriteLine($"The command {message.ToString()} from {message.Author} , failed because: {result.ErrorReason}");
             }
+        }
+
+        public async Task ListAsync(ISocketMessageChannel channel)
+        {
+            IEnumerable<CommandInfo> commands = _service.Commands;
+            EmbedBuilder embedBuilder = new EmbedBuilder();
+
+            foreach (CommandInfo command in commands)
+            {
+                embedBuilder.AddField(command.Name, (command.Summary ?? "No description available\n"));
+            }
+
+            await channel.SendMessageAsync("Here's a list of commands and their description: ", false, embedBuilder.Build());
         }
     }
 }
