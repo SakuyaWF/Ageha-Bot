@@ -35,7 +35,7 @@ namespace Ageha
             _client.Log += Log;
 
             // Pass the type of the program as bot and reads the token from a JSON file
-            await _client.LoginAsync(TokenType.Bot, JsonWrapper.ReadJSON(@"D:\Development\_Projects\Ageha\Ageha\Resources\auth.json").Value<string>("token"));
+            await _client.LoginAsync(TokenType.Bot, JsonWrapper.ReadJSON(@"E:\Development\_Bots\Discord\Ageha\Ageha\Resources\auth.json").Value<string>("token"));
             await _client.StartAsync();
 
             // Activate the commands and modules

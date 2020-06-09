@@ -9,11 +9,11 @@ namespace Ageha.Commands.Modules
     {
         [Command("say")]
         [Summary("Echoes a message.")]
-        public Task SayAsync([Remainder] [Summary("The text to echo")] string echo) => ReplyAsync(echo);
+        public Task SayAsync([Remainder][Summary("The text to echo")] string echo) => ReplyAsync(echo);
 
         [Command("says")]
         [Summary("Echoes a message.")]
-        public async Task SaysAsync([Remainder] [Summary("The text to echo")] string echo)
+        public async Task SaysAsync([Remainder][Summary("The text to echo")] string echo)
         {
             foreach (var tag in Context.Message.Tags)
             {
@@ -38,7 +38,7 @@ namespace Ageha.Commands.Modules
 
         [Command("ask")]
         [Summary("Send a question and she will answer")]
-        public Task AskAsync([Remainder] [Summary("The question")] string question = null)
+        public Task AskAsync([Remainder][Summary("The question")] string question = null)
         {
             string response = "Try typing something, fag.";
 
@@ -57,7 +57,7 @@ namespace Ageha.Commands.Modules
             EmbedBuilder smug = new EmbedBuilder();
 
             smug.Title = "*smugs*";
-            smug.ImageUrl = JsonWrapper.JsonChoose<string>(@"D:\Development\_Projects\Ageha\Ageha\Resources\smug.json");
+            smug.ImageUrl = JsonWrapper.JsonChoose<string>(@"E:\Development\_Bots\Discord\Ageha\Ageha\Resources\smug.json");
 
             return ReplyAsync(embed: smug.Build());
         }
@@ -68,7 +68,7 @@ namespace Ageha.Commands.Modules
 
         [Command("rps")]
         [Summary("Let's play rock, paper and scissors")]
-        public async Task RpsAsync([Remainder] [Summary("Your turn (rock, paper or scissors)")] string choice)
+        public async Task RpsAsync([Remainder][Summary("Your turn (rock, paper or scissors)")] string choice)
         {
             string bot_choose = Utils.Choose("Rock", "Paper", "Scissors");
 
@@ -86,6 +86,6 @@ namespace Ageha.Commands.Modules
 
         [Command("google")]
         [Summary("Google it !")]
-        public Task ChooseAsync([Remainder] [Summary("The thing to search for")] string search) => ReplyAsync($"http://lmgtfy.com/?q={search.Replace(' ', '+')}");
+        public Task ChooseAsync([Remainder][Summary("The thing to search for")] string search) => ReplyAsync($"http://lmgtfy.com/?q={search.Replace(' ', '+')}");
     }
 }
