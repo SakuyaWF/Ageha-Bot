@@ -81,6 +81,13 @@ namespace Ageha
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Logs a message to the console
+        /// </summary>
+        /// <param name="logSeverity">Severity</param>
+        /// <param name="message">The message to log</param>
+        /// <param name="source">The source of the message</param>
+        /// <returns></returns>
         public static Task Log(LogSeverity logSeverity, string message, string source = "Debugging") => Log(new LogMessage(logSeverity, source, message));
     }
 }
